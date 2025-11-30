@@ -5,6 +5,7 @@ from datetime import datetime
 import pandas as pd
 import base64
 from io import BytesIO
+import re
 
 st.set_page_config(
     page_title="Reverse Auction Products",
@@ -208,6 +209,18 @@ def analyze_bids(bids):
     
     return len(bids), len(counter), top_10
 
+def clean_html(text):
+    if not text:
+        return ""
+    text = re.sub(r'<img[^>]*>', '', text)
+    text = re.sub(r'<[^>]+>', ' ', text)
+    text = re.sub(r'&nbsp;', ' ', text)
+    text = re.sub(r'&amp;', '&', text)
+    text = re.sub(r'&lt;', '<', text)
+    text = re.sub(r'&gt;', '>', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
 with st.sidebar:
     st.markdown("### 🎯 Filters")
     st.markdown("---")
@@ -284,23 +297,21 @@ else:
             )
             
             images = (product.get('product_image', '') or '').split(',')
-            first_image = images[0] if images else ''
+            first_image = images[0].strip() if images and images[0].strip() else ''
             
             with st.container(border=True):
                 st.markdown(f'<span class="{status_class}">{status_text}</span>', unsafe_allow_html=True)
                 
-                if first_image:
+                if first_image and first_image.startswith('http'):
                     img_data = fetch_image(first_image)
                     if img_data:
                         st.image(img_data, use_container_width=True)
-                    else:
-                        st.caption("📷 Image unavailable")
                 
                 st.markdown(f"#### {product.get('product_name', 'Unknown')}")
                 
                 st.caption(f"📦 Code: `{product.get('product_code', 'N/A')}`")
                 
-                description = product.get('description', '')
+                description = clean_html(product.get('description', ''))
                 if description:
                     with st.expander("📝 Description"):
                         st.write(description)
