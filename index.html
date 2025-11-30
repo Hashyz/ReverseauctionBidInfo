@@ -1,28 +1,43 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Auction - Active Products</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <py-script> print('Yes it can!', 5+2) </py-script>
+    <div class="container">
+        <header>
+            <h1>Reverse Auction Products</h1>
+            <p class="subtitle">Click on a product to view bid details</p>
+        </header>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading products...</p>
+        </div>
+        
+        <main id="main-content" style="display: none;">
+            <section id="products-section">
+                <h2>Active Products</h2>
+                <div id="products-container" class="products-grid"></div>
+            </section>
+            
+            <section id="bid-section" class="bid-section" style="display: none;">
+                <div class="bid-header">
+                    <h2 id="selected-product-name">Bid Details</h2>
+                    <button id="close-bid" class="close-btn">Close</button>
+                </div>
+                <div id="bid-loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading bid history...</p>
+                </div>
+                <div id="bid-details"></div>
+            </section>
+        </main>
+    </div>
 
-  <script src="script.js"></script>
-  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-
- <!--
-  This script places a badge on your repl's full-browser view back to your repl's cover
-  page. Try various colors for the theme: dark, light, red, orange, yellow, lime, green,
-  teal, blue, blurple, magenta, pink!
-  -->
-  <script src="https://replit.com/public/js/replit-badge.js" theme="blue" defer></script>
-
+    <script src="app.js"></script>
 </body>
-
 </html>
