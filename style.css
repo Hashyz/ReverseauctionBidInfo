@@ -156,6 +156,13 @@ section h2 {
     margin-bottom: 10px;
 }
 
+.product-description {
+    color: #a0a8b8;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
 .product-price {
     font-size: 1.3rem;
     font-weight: 700;

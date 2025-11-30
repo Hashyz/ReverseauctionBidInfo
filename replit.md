@@ -23,7 +23,12 @@ A web application that displays active products from reverseauction.com.mm API a
 - Bid History: `https://reverseauction.com.mm/gateway/bid/bidhistory-web`
 
 ## Features
-1. Product grid display with images, prices, and status badges (Upcoming/Active/Ended)
+1. Product grid display with:
+   - Product images from API
+   - Product names and descriptions
+   - Prices in MMK
+   - Status badges (Upcoming/Active/Ended)
+   - Bidder counts
 2. Bid details panel with:
    - Total bids count
    - Unique bidders count

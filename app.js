@@ -82,6 +82,9 @@ function renderProducts(products) {
         card.className = `product-card ${status.class}`;
         card.setAttribute('data-cpid', product.cp_id);
         
+        const description = product.description || '';
+        const truncatedDesc = description.length > 100 ? description.substring(0, 100) + '...' : description;
+        
         card.innerHTML = `
             <div class="product-image">
                 <img src="${firstImage}" alt="${product.product_name || ''}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
@@ -90,6 +93,7 @@ function renderProducts(products) {
             <div class="product-info">
                 <h3 class="product-name">${product.product_name || 'Unknown'}</h3>
                 <p class="product-code">Code: ${product.product_code || 'N/A'}</p>
+                ${truncatedDesc ? `<p class="product-description">${truncatedDesc}</p>` : ''}
                 <p class="product-price">${formatPrice(product.product_price || 0)}</p>
                 <div class="product-times">
                     <p><strong>Start:</strong> ${formatDateTime(product.start_time)}</p>
