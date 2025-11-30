@@ -1,5 +1,6 @@
 const PRODUCTS_API = '/api/products';
 const BID_HISTORY_API = '/api/bid-history';
+const DIRECT_BID_API = 'https://reverseauction.com.mm/gateway/bid/bidhistory-web';
 
 let productsData = [];
 
@@ -52,15 +53,38 @@ async function fetchProducts() {
 }
 
 async function fetchBidHistory(cpId) {
+    const directUrl = `https://reverseauction.com.mm/gateway/bid/bidhistory-web?cp_id=${cpId}&pageSize=100000&current=1&sort=desc`;
+    
     try {
-        const url = `${BID_HISTORY_API}?cp_id=${cpId}`;
-        const response = await fetch(url);
+        const response = await fetch(directUrl);
         const data = await response.json();
-        return data.data || [];
-    } catch (e) {
-        console.error('Error fetching bid history:', e);
-        return [];
+        return extractBidData(data);
+    } catch (directError) {
+        console.log('Direct fetch failed, trying proxy...');
+        try {
+            const proxyUrl = `${BID_HISTORY_API}?cp_id=${cpId}`;
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
+            return extractBidData(data);
+        } catch (proxyError) {
+            console.error('Both direct and proxy fetch failed:', proxyError);
+            return [];
+        }
     }
+}
+
+function extractBidData(data) {
+    if (data.data && Array.isArray(data.data) && data.data.length > 0) {
+        return data.data;
+    }
+    if (data.records && Array.isArray(data.records)) {
+        return data.records;
+    }
+    if (data.data && data.data.records) {
+        return data.data.records;
+    }
+    console.log('Bid API Response:', data);
+    return [];
 }
 
 function renderProducts(products) {
