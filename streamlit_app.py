@@ -3,6 +3,8 @@ import requests
 from collections import Counter
 from datetime import datetime
 import pandas as pd
+import base64
+from io import BytesIO
 
 st.set_page_config(
     page_title="Reverse Auction Products",
@@ -118,6 +120,18 @@ HEADERS = {
     "Origin": "http://www.reverseauction.com.mm",
     "Referer": "http://www.reverseauction.com.mm/up-next",
 }
+
+@st.cache_data(ttl=300)
+def fetch_image(image_url):
+    try:
+        response = requests.get(image_url, headers={
+            "User-Agent": HEADERS["User-Agent"],
+            "Referer": "http://www.reverseauction.com.mm/"
+        }, timeout=15)
+        response.raise_for_status()
+        return response.content
+    except:
+        return None
 
 @st.cache_data(ttl=60)
 def fetch_products():
@@ -276,7 +290,11 @@ else:
                 st.markdown(f'<span class="{status_class}">{status_text}</span>', unsafe_allow_html=True)
                 
                 if first_image:
-                    st.image(first_image, use_container_width=True)
+                    img_data = fetch_image(first_image)
+                    if img_data:
+                        st.image(img_data, use_container_width=True)
+                    else:
+                        st.caption("📷 Image unavailable")
                 
                 st.markdown(f"#### {product.get('product_name', 'Unknown')}")
                 
