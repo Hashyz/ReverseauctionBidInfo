@@ -51,5 +51,29 @@ def get_bid_history():
     except requests.exceptions.RequestException as e:
         return jsonify({"success": False, "error": str(e), "data": []}), 500
 
+@app.route('/api/image')
+def proxy_image():
+    image_url = request.args.get('url', '')
+    if not image_url:
+        return 'No URL provided', 400
+    
+    if not image_url.startswith('http://reverseauction.com.mm'):
+        return 'Invalid image URL', 400
+    
+    try:
+        response = requests.get(image_url, headers={
+            "User-Agent": HEADERS["User-Agent"],
+            "Referer": "http://www.reverseauction.com.mm/"
+        }, timeout=30)
+        response.raise_for_status()
+        
+        from flask import Response
+        return Response(
+            response.content,
+            mimetype=response.headers.get('Content-Type', 'image/png')
+        )
+    except requests.exceptions.RequestException as e:
+        return str(e), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)

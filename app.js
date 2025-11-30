@@ -76,7 +76,10 @@ function renderProducts(products) {
     products.forEach(product => {
         const status = getStatusText(product.start_time, product.end_time);
         const images = (product.product_image || '').split(',');
-        const firstImage = images[0] || '';
+        let firstImage = images[0] || '';
+        if (firstImage.startsWith('http://reverseauction.com.mm')) {
+            firstImage = '/api/image?url=' + encodeURIComponent(firstImage);
+        }
         
         const card = document.createElement('div');
         card.className = `product-card ${status.class}`;
