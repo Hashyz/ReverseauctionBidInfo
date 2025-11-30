@@ -6,7 +6,7 @@ channel = "stable-24_11"
 packages = ["static-web-server"]
 
 [deployment]
-publicDir = "/"
+publicDir = "."
 deploymentTarget = "static"
 
 [workflows]
@@ -32,19 +32,19 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Static Server"
+args = "Web Server"
 
 [[workflows.workflow]]
-name = "Static Server"
+name = "Web Server"
 author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python server.py"
 waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
 
 [[ports]]
 localPort = 80

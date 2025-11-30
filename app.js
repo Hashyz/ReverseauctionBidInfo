@@ -53,7 +53,7 @@ async function fetchProducts() {
 
 async function fetchBidHistory(cpId) {
     try {
-        const url = `${BID_HISTORY_API}?cp_id=${cpId}&pageSize=100000&current=1&sort=desc`;
+        const url = `${BID_HISTORY_API}?cp_id=${cpId}`;
         const response = await fetch(url);
         const data = await response.json();
         return data.data || [];
