@@ -212,7 +212,7 @@ function closeBidSection() {
 }
 
 let allProducts = [];
-let currentFilter = 'all';
+let currentFilter = 'active';
 
 function filterProducts(filter) {
     currentFilter = filter;
@@ -259,7 +259,7 @@ async function init() {
     loading.style.display = 'none';
     mainContent.style.display = 'block';
     
-    renderProducts(allProducts);
+    filterProducts('active');
     
     document.getElementById('close-bid').addEventListener('click', closeBidSection);
     
