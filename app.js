@@ -211,18 +211,61 @@ function closeBidSection() {
     document.getElementById('bid-section').style.display = 'none';
 }
 
+let allProducts = [];
+let currentFilter = 'all';
+
+function filterProducts(filter) {
+    currentFilter = filter;
+    const now = new Date();
+    
+    let filtered = allProducts;
+    if (filter === 'active') {
+        filtered = allProducts.filter(p => {
+            const start = new Date(p.start_time);
+            const end = new Date(p.end_time);
+            return now >= start && now <= end;
+        });
+    } else if (filter === 'upcoming') {
+        filtered = allProducts.filter(p => {
+            const start = new Date(p.start_time);
+            return now < start;
+        });
+    } else if (filter === 'ended') {
+        filtered = allProducts.filter(p => {
+            const end = new Date(p.end_time);
+            return now > end;
+        });
+    }
+    
+    renderProducts(filtered);
+    updateFilterButtons(filter);
+}
+
+function updateFilterButtons(activeFilter) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === activeFilter) {
+            btn.classList.add('active');
+        }
+    });
+}
+
 async function init() {
     const loading = document.getElementById('loading');
     const mainContent = document.getElementById('main-content');
     
-    const products = await fetchProducts();
+    allProducts = await fetchProducts();
     
     loading.style.display = 'none';
     mainContent.style.display = 'block';
     
-    renderProducts(products);
+    renderProducts(allProducts);
     
     document.getElementById('close-bid').addEventListener('click', closeBidSection);
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => filterProducts(btn.dataset.filter));
+    });
 }
 
 document.addEventListener('DOMContentLoaded', init);
